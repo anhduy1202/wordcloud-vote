@@ -1,8 +1,9 @@
-import Head from "next/head";
-import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 export default function Home() {
+  const session= useSession()
+  console.log(session)
   useEffect(() => {
     const fetchGraph = async () => {
       const response = await fetch("http://127.0.0.1:8000/graph", {
