@@ -6,9 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from io import BytesIO
 import numpy as np
 from fastapi.responses import StreamingResponse
+import uvicorn
 import base64
 import threading
-import uvicorn
 
 app = FastAPI()
 origins = [

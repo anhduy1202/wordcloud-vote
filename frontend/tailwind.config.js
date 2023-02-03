@@ -12,8 +12,17 @@ module.exports = {
     extend: {
       fontFamily: {
         cloud: ["Fredoka One"],
-        mont: ["Montserrat"]
+        mont: ["Montserrat"],
       },
+      animation: {
+        "slide": "floatcloud 2s linear infinite",
+      },
+      keyframes:{
+        floatcloud:{
+            '0%': {transform: 'translate(-100%)'},
+            '100%': {transform: 'translate(100%)'}
+          }
+      }
     },
   },
   plugins: [],
