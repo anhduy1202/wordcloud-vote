@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { BsGithub } from "react-icons/bs";
 import { AiFillCloud, AiOutlineLoading3Quarters } from "react-icons/ai";
 

@@ -1,9 +1,17 @@
 import NavBar from "@/components/NavBar/NavBar";
-import { GetServerSidePropsContext } from "next";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import { getSession, useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { PrismaClient } from "@prisma/client";
+import { User } from "@/types/user";
+import { MdPoll } from "react-icons/md";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const prisma = new PrismaClient();
   // Check if user is authenticated
   const session = await getSession(context);
   // If not, redirect to the signin page
@@ -15,6 +23,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
+
   return {
     props: {},
   };
@@ -43,6 +52,12 @@ export default function Home() {
   return (
     <section className="w-[100vw] h-[100vh] flex flex-col">
       <NavBar />
+      <div className="mt-4 gap-2 flex items-center justify-center">
+        <MdPoll size={36} color="rgb(147 197 253)" />
+        <p className="text-[1.5rem] font-bold font-mont">
+          Poll Collections
+        </p>
+      </div>
       <img id="graph" src="" className="object-contain" alt="graph" />
     </section>
   );

@@ -3,7 +3,8 @@ export interface Auth {
     expires: string
 }
 export interface User {
-    name: string
-    email: string
-    image: string
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
+    id?: string | null | undefined
 }
