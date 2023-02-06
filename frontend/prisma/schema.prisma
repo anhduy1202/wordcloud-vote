@@ -10,19 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Poll {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String?
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String?
+  owner       User     @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  responses   String[]
+}
+
 model Account {
-  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.String
-  access_token       String?  @db.String
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.String
-  session_state      String?
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -45,10 +57,11 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  polls         Poll[]
 }
 
 model VerificationToken {
-  identifier String @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String   @id @default(auto()) @map("_id") @db.ObjectId
   token      String   @unique
   expires    DateTime
 

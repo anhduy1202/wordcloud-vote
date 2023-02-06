@@ -5,15 +5,19 @@ import {
   InferGetServerSidePropsType,
 } from "next";
 import { getSession, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { Key, useEffect } from "react";
 import { PrismaClient } from "@prisma/client";
 import { User } from "@/types/user";
 import { MdPoll } from "react-icons/md";
+import { Poll } from "@/types/poll";
+import { SinglePoll } from "@/components/Polls/SinglePoll";
+import axios from "axios";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const prisma = new PrismaClient();
   // Check if user is authenticated
   const session = await getSession(context);
+  const user: User | undefined = session?.user;
   // If not, redirect to the signin page
   if (!session) {
     return {
@@ -23,24 +27,30 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
-
+  // Get Poll Collections from user
+  const polls: Poll[] = await prisma.poll.findMany({
+    where: { ownerId: `${user?.id}` },
+    orderBy: { createdAt: "desc" },
+  });
   return {
-    props: {},
+    props: {
+      polls: JSON.parse(JSON.stringify(polls)),
+    },
   };
 }
 
-export default function Home() {
+export default function Home({
+  polls = [],
+}: InferGetServerSidePropsType<GetServerSideProps>) {
   const { data: session } = useSession();
-  console.log(session);
   useEffect(() => {
     const fetchGraph = async () => {
-      const response = await fetch("http://127.0.0.1:8000/graph", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const blob = await response.blob();
+      //test data
+      const test = {
+        responses: ["react","react","react","remix","next.js","svelte","next.js"]
+      }
+      const response = await axios.post("http://127.0.0.1:8000/cloud", test, {responseType: 'blob'})
+      const blob = response.data
       var myImage: any = document.querySelector("#graph");
       const objectURL = URL.createObjectURL(blob);
       console.log(objectURL);
@@ -54,9 +64,16 @@ export default function Home() {
       <NavBar />
       <div className="mt-4 gap-2 flex items-center justify-center">
         <MdPoll size={36} color="rgb(147 197 253)" />
-        <p className="text-[1.5rem] font-bold font-mont">
-          Poll Collections
-        </p>
+        <p className="text-[1.5rem] font-bold font-mont">Poll Collections</p>
+      </div>
+      <div className="m-4">
+        {polls.map((poll: Poll) => {
+          return (
+            <div key={poll.id as Key}> 
+              <SinglePoll poll={poll} />
+            </div>
+          );
+        })}
       </div>
       <img id="graph" src="" className="object-contain" alt="graph" />
     </section>

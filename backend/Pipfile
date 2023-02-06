@@ -8,6 +8,8 @@ fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 numpy = "*"
 matplotlib = "*"
+wordcloud = "*"
+pillow = "*"
 
 [dev-packages]
 
