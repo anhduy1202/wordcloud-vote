@@ -28,7 +28,7 @@ app.add_middleware(
 @app.post("/cloud")
 async def create_cloud(words: Request):
     req_words = await words.json()
-    words = " ".join(word for word in req_words['responses'])
+    words = " ".join(word for word in req_words["responses"])
     print(words)
     image = BytesIO()
     wordcloud = WordCloud(max_font_size=40).generate(words)
@@ -36,22 +36,7 @@ async def create_cloud(words: Request):
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
     img = wordcloud.to_image()
-    img.save(image, 'png')
-    image.seek(0)
-    return StreamingResponse(image, media_type="image/png")
-
-
-@app.get("/graph")
-async def create_graph():
-    words = " ".join(word for word in wordsLists)
-    print(words)
-    image = BytesIO()
-    wordcloud = WordCloud(max_font_size=40).generate(words)
-    plt.figure()
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    img = wordcloud.to_image()
-    img.save(image, 'png')
+    img.save(image, "png")
     image.seek(0)
     return StreamingResponse(image, media_type="image/png")
 
@@ -61,5 +46,5 @@ def read_root():
     return {"hi": "hlelo"}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
