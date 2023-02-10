@@ -8,9 +8,10 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from "next";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { Cookies } from "react-cookie";
+import { AiFillCloud } from "react-icons/ai";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context?.params?.id;
@@ -49,21 +50,18 @@ const Poll = ({
   const [isOwner, setOwner] = useState(false);
   const { id, title, description, createdAt, owner, responses } = poll;
   const [isVoted, setVoted] = useState(false);
+  const [cloudLoading, setCloudLoading] = useState(true)
   const nextCookies = new Cookies();
   useEffect(() => {
-    // check owner
-    if (currentUser.id == owner.id) {
-      setOwner(true);
-    } else {
-      setOwner(false);
-    }
     const fetchGraph = async () => {
+      setCloudLoading(true)
       const data = {
         responses: responses,
       };
       const response = await axios.post("http://localhost:8000/cloud", data, {
         responseType: "blob",
       });
+      setCloudLoading(false)
       const blob = response.data;
       var myImage: any = document.querySelector("#graph");
       const objectURL = URL.createObjectURL(blob);
@@ -77,23 +75,40 @@ const Poll = ({
     } else {
       setVoted(false);
     }
+    // check owner
+    if (currentUser.id == owner.id) {
+      setOwner(true);
+      setVoted(true);
+      fetchGraph();
+    } else {
+      setOwner(false);
+    }
   }, []);
   return (
-    <section className="mt-8 flex items-center flex-col">
-      <p className="text-[1.25rem] font-bold font-mont">{title} </p>
-      <p> {description} </p>
-      <p>
-        by <span className="font-bold"> {owner.name}</span>
-      </p>
-      <p> {isOwner ? "is owner" : "not owner"} </p>
-      {/* Can only vote if you're not the owner and you haven't voted */}
-      {!isOwner && !isVoted && <Vote currentUser={currentUser} pollId={id} />}
+    <>
+      <section className="mt-8 flex items-center flex-col bg-sky-100 p-4 mx-4 rounded-[1rem]">
+        <p className="">
+          by <span className="font-bold"> {owner.name}</span>
+        </p>
+        <p className="text-[1.25rem] font-bold font-mont text-center">
+          {title}
+        </p>
+        <p> {description} </p>
+        {/* Can only vote if you're not the owner and you haven't voted */}
+        {!isOwner && !isVoted && <Vote currentUser={currentUser} pollId={id} />}
+      </section>
       {/* Only owner or people who voted able to see the graph */}
-      {isOwner ||
-        (isVoted && (
-          <img id="graph" src="" className="object-contain" alt="graph" />
-        ))}
-    </section>
+      {(isOwner || isVoted) && (
+        <div className="mt-10 flex flex-col items-center">
+          {cloudLoading ? (
+            <AiFillCloud size={64} color="rgb(147 197 253)" className="animate-bounce"/>
+          ):(
+            <p className="font-mont text-[1.5rem] font-bold"> Results </p>
+          )}
+          <img id="graph" src="" className="p-4 object-contain" alt="" />
+        </div>
+      )}
+    </>
   );
 };
 

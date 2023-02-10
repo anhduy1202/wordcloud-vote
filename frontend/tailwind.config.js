@@ -15,14 +15,17 @@ module.exports = {
         mont: ["Montserrat"],
       },
       animation: {
-        "slide": "floatcloud 2s linear infinite",
+        slide: "floatcloud 2s linear infinite",
       },
-      keyframes:{
-        floatcloud:{
-            '0%': {transform: 'translate(-100%)'},
-            '100%': {transform: 'translate(100%)'}
-          }
-      }
+      colors: {
+        "btn-important": "#5158BB",
+      },
+      keyframes: {
+        floatcloud: {
+          "0%": { transform: "translate(-100%)" },
+          "100%": { transform: "translate(100%)" },
+        },
+      },
     },
   },
   plugins: [],
