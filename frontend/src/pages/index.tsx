@@ -7,7 +7,6 @@ import { getSession, useSession } from "next-auth/react";
 import { Key } from "react";
 import { PrismaClient } from "@prisma/client";
 import { User } from "@/types/user";
-import { MdPoll } from "react-icons/md";
 import { Poll } from "@/types/poll";
 import { SinglePoll } from "@/components/Polls/SinglePoll";
 
@@ -41,12 +40,12 @@ export default function Home({
   polls = [],
 }: InferGetServerSidePropsType<GetServerSideProps>) {
   return (
-    <section>
-      <div className="mt-4 gap-2 flex items-center justify-center">
-        <MdPoll size={36} color="rgb(147 197 253)" />
-        <p className="text-[1.5rem] font-bold font-mont">Poll Collections</p>
+    <section className="md:mx-[16rem]">
+      <div className="my-10 flex flex-col ml-4">
+        <p className="text-[1.5rem] font-bold font-mont md:text-[2.5rem]">Your Collections</p>
+        <p className="text-[#adb5bd] md:text-[1.5rem]"> Below are the polls created by you </p>
       </div>
-      <div className="m-4">
+      <div className="m-4 md:my-4">
         {polls.map((poll: Poll) => {
           return (
             <div key={poll.id as Key}>

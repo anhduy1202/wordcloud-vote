@@ -1,7 +1,27 @@
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { BsGithub } from "react-icons/bs";
 import { AiFillCloud, AiOutlineLoading3Quarters } from "react-icons/ai";
+import { GetServerSidePropsContext } from "next";
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // Check if user is authenticated
+  const session = await getSession(context);
+  // If user already signed in, move them to homepage
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props:{
+      
+    }
+  };
+}
 
 const signin = () => {
   const [isClicked, setClick] = useState(false);
