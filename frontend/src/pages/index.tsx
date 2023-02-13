@@ -3,7 +3,7 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from "next";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { Key } from "react";
 import { PrismaClient } from "@prisma/client";
 import { User } from "@/types/user";
