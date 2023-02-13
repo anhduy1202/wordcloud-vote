@@ -25,7 +25,7 @@ const Vote: React.FC<voteProps> = (props) => {
       content: vote.toLowerCase(),
       pollId: pollId,
     };
-    const data = await axios.post("/api/vote", req);
+    await axios.post("/api/vote", req);
     nextCookies.set("voted", "true");
     setLoading(false);
     setSubmitted(true);
