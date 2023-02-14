@@ -23,7 +23,7 @@ export const SinglePoll: React.FC<PollProps> = (props) => {
   };
   return (
     <div
-      className="bg-blue-100 p-4 rounded-md cursor-pointer relative md:p-8"
+      className="bg-blue-100 p-4 rounded-md cursor-pointer relative md:p-8 my-10"
       onClick={goToPoll}
     >
       <p className="font-bold md:text-[1.75rem]"> {title}</p>

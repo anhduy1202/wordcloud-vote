@@ -1,7 +1,6 @@
 import { Poll } from "@/types/poll";
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
 
 const prisma = new PrismaClient();
 
