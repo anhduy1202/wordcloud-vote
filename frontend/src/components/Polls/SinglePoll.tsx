@@ -18,7 +18,6 @@ export const SinglePoll: React.FC<PollProps> = (props) => {
   };
   const formattedDate = date.toLocaleDateString("en-US", option);
   const goToPoll = () => {
-    console.log(id);
     router.push(`/poll/${id}`);
   };
   return (

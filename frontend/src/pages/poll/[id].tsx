@@ -11,7 +11,7 @@ import {
 import { getSession, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { Cookies } from "react-cookie";
-import { AiFillCloud } from "react-icons/ai";
+import { AiFillCloud, AiOutlineLink } from "react-icons/ai";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context?.params?.id;
@@ -50,18 +50,18 @@ const Poll = ({
   const [isOwner, setOwner] = useState(false);
   const { id, title, description, createdAt, owner, responses } = poll;
   const [isVoted, setVoted] = useState(false);
-  const [cloudLoading, setCloudLoading] = useState(true)
+  const [cloudLoading, setCloudLoading] = useState(true);
   const nextCookies = new Cookies();
   useEffect(() => {
     const fetchGraph = async () => {
-      setCloudLoading(true)
+      setCloudLoading(true);
       const data = {
         responses: responses,
       };
       const response = await axios.post("http://localhost:8000/cloud", data, {
         responseType: "blob",
       });
-      setCloudLoading(false)
+      setCloudLoading(false);
       const blob = response.data;
       var myImage: any = document.querySelector("#graph");
       const objectURL = URL.createObjectURL(blob);
@@ -71,7 +71,7 @@ const Poll = ({
     let voteCookie = nextCookies.get("voted");
     if (voteCookie == "true") {
       setVoted(true);
-      fetchGraph();
+      responses.length > 0 && fetchGraph();
     } else {
       setVoted(false);
     }
@@ -79,13 +79,24 @@ const Poll = ({
     if (currentUser.id == owner.id) {
       setOwner(true);
       setVoted(true);
-      fetchGraph();
+      responses.length > 0 && fetchGraph();
     } else {
       setOwner(false);
     }
   }, []);
   return (
     <>
+      <button
+        className="flex items-center justify-center mt-8"
+        onClick={() => {
+          navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_ROOT_URL}/poll/${poll.id}`);
+        }}
+      >
+        <p className="bg-blue-400 flex  p-2 rounded-lg">
+          <AiOutlineLink size={24} className="mr-2" />
+          Copy link
+        </p>
+      </button>
       <section className="mt-8 flex items-center flex-col bg-sky-100 p-4 mx-4 rounded-[1rem]">
         <p className="">
           by <span className="font-bold"> {owner.name}</span>
@@ -101,11 +112,19 @@ const Poll = ({
       {(isOwner || isVoted) && (
         <div className="mt-10 flex flex-col items-center">
           {cloudLoading ? (
-            <AiFillCloud size={64} color="rgb(147 197 253)" className="animate-bounce"/>
-          ):(
+            <AiFillCloud
+              size={64}
+              color="rgb(147 197 253)"
+              className="animate-bounce"
+            />
+          ) : (
             <p className="font-mont text-[1.5rem] font-bold"> Results </p>
           )}
-          <img id="graph" src="" className="p-4 object-contain" alt="" />
+          {responses.length > 0 ? (
+            <img id="graph" src="" className="p-4 object-contain" alt="" />
+          ) : (
+            <p> No votes yet </p>
+          )}
         </div>
       )}
     </>

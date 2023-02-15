@@ -29,7 +29,6 @@ app.add_middleware(
 async def create_cloud(words: Request):
     req_words = await words.json()
     words = " ".join(word for word in req_words["responses"])
-    print(words)
     image = BytesIO()
     wordcloud = WordCloud(max_font_size=40).generate(words)
     plt.figure()
