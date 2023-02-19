@@ -1,4 +1,5 @@
 import Vote from "@/components/Polls/Vote";
+import { PopUp } from "@/components/Popup/Popup";
 import { Poll } from "@/types/poll";
 import { User } from "@/types/user";
 import { PrismaClient } from "@prisma/client";
@@ -47,10 +48,11 @@ const Poll = ({
   poll,
   currentUser,
 }: InferGetServerSidePropsType<GetServerSideProps>) => {
-  const [isOwner, setOwner] = useState(false);
   const { id, title, description, createdAt, owner, responses } = poll;
+  const [isOwner, setOwner] = useState(false);
   const [isVoted, setVoted] = useState(false);
   const [cloudLoading, setCloudLoading] = useState(true);
+  const [isOpen, setOpen] = useState(false);
   const nextCookies = new Cookies();
   useEffect(() => {
     const fetchGraph = async () => {
@@ -67,14 +69,20 @@ const Poll = ({
       const objectURL = URL.createObjectURL(blob);
       myImage.src = objectURL;
     };
-    // Check if user already voted yet, if not then dont show the wordcloud
+    // Check if user already voted yet by matching cookie, if not then dont show the wordcloud
     let voteCookie = nextCookies.get("voted");
-    if (voteCookie == "true") {
-      setVoted(true);
-      responses.length > 0 && fetchGraph();
+    if (voteCookie != undefined) {
+      let cookieArr = voteCookie.split(",");
+      if (cookieArr.includes(id)) {
+        setVoted(true);
+        responses.length > 0 && fetchGraph();
+      } else {
+        setVoted(false);
+      }
     } else {
       setVoted(false);
     }
+
     // check owner
     if (currentUser.id == owner.id) {
       setOwner(true);
@@ -89,13 +97,17 @@ const Poll = ({
       <button
         className="flex items-center justify-center mt-8"
         onClick={() => {
-          navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_ROOT_URL}/poll/${poll.id}`);
+          setOpen(true);
+          navigator.clipboard.writeText(
+            `${process.env.NEXT_PUBLIC_ROOT_URL}/poll/${poll.id}`
+          );
         }}
       >
-        <p className="bg-blue-400 flex  p-2 rounded-lg">
+        <p className="bg-gray-200 flex  p-2 rounded-lg">
           <AiOutlineLink size={24} className="mr-2" />
           Copy link
         </p>
+        <PopUp title="Link Copied" isOpen={isOpen} setOpen={setOpen} />
       </button>
       <section className="mt-8 flex items-center flex-col bg-sky-100 p-4 mx-4 rounded-[1rem]">
         <p className="">

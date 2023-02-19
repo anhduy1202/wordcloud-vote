@@ -26,7 +26,14 @@ const Vote: React.FC<voteProps> = (props) => {
       pollId: pollId,
     };
     await axios.post("/api/vote", req);
-    nextCookies.set("voted", "true");
+    // Append cookie with new poll id
+    let currentCookie = nextCookies.get("voted");
+    if (currentCookie == undefined) {
+      nextCookies.set("voted", pollId);
+    } else {
+      let newCookie = currentCookie + "," + pollId;
+      nextCookies.set("voted", newCookie);
+    }
     setLoading(false);
     setSubmitted(true);
     router.reload();
