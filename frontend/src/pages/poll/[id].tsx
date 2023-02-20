@@ -30,7 +30,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // If user logged in, return current user info
   if (session) {
     user = await prisma.user.findUnique({
-      where: { email: session?.user?.email },
+      where: { email: session?.user?.email as any},
     });
   } else {
     user = {};

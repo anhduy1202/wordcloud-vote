@@ -20,13 +20,13 @@ export default async function handler(
       const { title, description } = req.body;
       // Retrieve current user
       const user = await prisma.user.findUnique({
-        where: { email: session?.user?.email },
+        where: { email: session?.user?.email as any},
       });
       await prisma.poll.create({
         data: {
-          title: title,
-          description: description,
-          ownerId: user?.id,
+          title: title as any,
+          description: description as any,
+          ownerId: user?.id as any,
         },
       });
       res.status(200).json({ message: "Poll created" });

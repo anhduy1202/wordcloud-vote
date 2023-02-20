@@ -1,6 +1,7 @@
 import { Poll } from "@/types/poll";
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+import { Key } from "react";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +20,7 @@ export default async function handler(
       });
       // Update responses array 
       await prisma.poll.update({
-        where: {id: poll?.id},
+        where: {id: poll?.id as any},
         data: {
             responses:{
                 push: content
