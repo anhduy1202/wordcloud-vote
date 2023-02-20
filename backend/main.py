@@ -9,13 +9,7 @@ from fastapi.responses import StreamingResponse
 import uvicorn
 
 app = FastAPI()
-origins = [
-    "https://wordcloud-vote.vercel.app"
-    "http://localhost:3000",
-]
-
-wordsLists = ["react", "react", "vue", "svelte"]
-
+origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -23,7 +17,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+wordsLists = ["react", "react", "vue", "svelte"]
 
 @app.post("/cloud")
 async def create_cloud(words: Request):
