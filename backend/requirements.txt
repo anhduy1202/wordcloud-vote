@@ -1,0 +1,5 @@
+fastapi==0.92.0
+matplotlib==3.6.3
+numpy==1.23.3
+uvicorn==0.20.0
+wordcloud==1.8.2.2

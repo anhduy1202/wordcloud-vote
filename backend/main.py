@@ -8,7 +8,6 @@ import numpy as np
 from fastapi.responses import StreamingResponse
 import uvicorn
 
-
 app = FastAPI()
 origins = [
     "http://localhost:3000",

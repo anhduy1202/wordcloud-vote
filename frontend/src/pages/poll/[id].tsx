@@ -60,7 +60,7 @@ const Poll = ({
       const data = {
         responses: responses,
       };
-      const response = await axios.post("http://localhost:8000/cloud", data, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/cloud`, data, {
         responseType: "blob",
       });
       setCloudLoading(false);
