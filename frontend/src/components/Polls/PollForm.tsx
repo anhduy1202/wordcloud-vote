@@ -48,7 +48,7 @@ const PollForm = () => {
                   <input
                     {...register("title", {
                       required: true,
-                      maxLength: 20,
+                      maxLength: 50,
                     })}
                     className="w-full text-sm mt-2 focus:outline-none"
                     type="text"
@@ -61,7 +61,7 @@ const PollForm = () => {
                   <input
                     {...register("about", {
                       required: true,
-                      maxLength: 20,
+                      maxLength: 50,
                     })}
                     className="w-full text-sm mt-2 focus:outline-none"
                     type="text"
