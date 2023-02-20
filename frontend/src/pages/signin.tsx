@@ -3,6 +3,7 @@ import { getSession, signIn } from "next-auth/react";
 import { BsGithub } from "react-icons/bs";
 import { AiFillCloud, AiOutlineLoading3Quarters } from "react-icons/ai";
 import { GetServerSidePropsContext } from "next";
+import Loading from "@/components/Loading/Loading";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // Check if user is authenticated
@@ -17,9 +18,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
   return {
-    props:{
-      
-    }
+    props: {},
   };
 }
 
@@ -48,7 +47,7 @@ const signin = () => {
           }}
         >
           {isClicked ? (
-            <AiOutlineLoading3Quarters className="animate-spin" size={36} />
+            <Loading isLoading={isClicked} />
           ) : (
             <>
               Sign In with Github

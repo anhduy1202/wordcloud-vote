@@ -1,12 +1,14 @@
 import { Popover, Transition } from "@headlessui/react";
 import axios from "axios";
+import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
-import { AiOutlineLoading } from "react-icons/ai";
+import Loading from "../Loading/Loading";
 
 const PollForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const router = useRouter();
   const createPoll = async (e: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     e.preventDefault();
@@ -16,6 +18,7 @@ const PollForm = () => {
     };
     await axios.post("/api/poll", data);
     setLoading(false);
+    router.reload()
   };
   return (
     <Transition
@@ -32,7 +35,7 @@ const PollForm = () => {
           <form
             className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
             onSubmit={async (e) => {
-              createPoll(e);
+              await createPoll(e);
               close();
             }}
           >
@@ -67,7 +70,7 @@ const PollForm = () => {
                   disabled
                   className="flex-1 p-2 rounded-md bg-btn-important flex justify-center text-white text-[0.85rem] "
                 >
-                  <AiOutlineLoading size={24} className="animate-spin" />
+                  <Loading isLoading={isLoading} />
                 </button>
               ) : (
                 <button

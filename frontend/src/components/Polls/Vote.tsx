@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { Cookies } from "react-cookie";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import Loading from "../Loading/Loading";
 
 interface voteProps {
   currentUser: User;
@@ -62,11 +62,7 @@ const Vote: React.FC<voteProps> = (props) => {
               type="submit"
               className="flex-1 p-2 flex justify-center rounded-md bg-btn-important text-white "
             >
-              {isLoading ? (
-                <AiOutlineLoading3Quarters size={24} className="animate-spin" />
-              ) : (
-                "Vote"
-              )}
+              {isLoading ? <Loading isLoading={isLoading} /> : "Vote"}
             </button>
           </div>
         </form>

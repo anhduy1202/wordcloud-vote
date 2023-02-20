@@ -1,7 +1,6 @@
 import { Poll } from "@/types/poll";
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Key } from "react";
 
 const prisma = new PrismaClient();
 
