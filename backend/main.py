@@ -10,8 +10,8 @@ import uvicorn
 
 app = FastAPI()
 origins = [
+    "https://wordcloud-vote.vercel.app"
     "http://localhost:3000",
-    "https://wordcloud-vote.vercel.app/"
 ]
 
 wordsLists = ["react", "react", "vue", "svelte"]
