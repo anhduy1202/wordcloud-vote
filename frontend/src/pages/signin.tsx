@@ -43,7 +43,7 @@ const signin = () => {
             setClick(true);
             signIn("github", {
               redirect: false,
-              callbackUrl: "http://localhost:3000",
+              callbackUrl: "https://wordcloud-vote.vercel.app/",
             });
           }}
         >
