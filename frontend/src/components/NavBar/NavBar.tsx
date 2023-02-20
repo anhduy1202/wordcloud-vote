@@ -6,16 +6,18 @@ import { UserPopUp } from "../Popup/Popup";
 import { BsLightningCharge } from "react-icons/bs";
 import { Popover, Transition } from "@headlessui/react";
 import PollForm from "../Polls/PollForm";
+import { useRouter } from "next/router";
 
 const NavBar = () => {
   const { data: session } = useSession();
   const user: User | undefined = session?.user;
   const avatar = session?.user?.image;
+  const router = useRouter();
   const [isOpened, setOpenPopup] = useState(false);
   return (
     <Popover className="relative">
       <nav className="p-2 flex bg-blue-300 items-center font-mont justify-between">
-        <AiFillCloud size={48} color="white" />
+        <AiFillCloud size={48} color="white" className="cursor-pointer" onClick={()=>router.push("/")} />
         <PollForm />
         {avatar && (
           <>
