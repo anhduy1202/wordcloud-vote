@@ -2,23 +2,25 @@ import { Popover, Transition } from "@headlessui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
+import { useForm } from "react-hook-form";
 import Loading from "../Loading/Loading";
 
+// Create Poll from form
 const PollForm = () => {
+  const { register, handleSubmit } = useForm();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
-  const createPoll = async (e: React.FormEvent<HTMLFormElement>) => {
+  const createPoll = async () => {
     setLoading(true);
-    e.preventDefault();
     const data = {
       title: title,
       description: description,
     };
     await axios.post("/api/poll", data);
     setLoading(false);
-    router.reload()
+    router.reload();
   };
   return (
     <Transition
@@ -34,16 +36,20 @@ const PollForm = () => {
         {({ close }) => (
           <form
             className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-            onSubmit={async (e) => {
-              await createPoll(e);
+            onSubmit={handleSubmit(async () => {
+              await createPoll();
               close();
-            }}
+            })}
           >
             <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
               <div className="flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50">
                 <div className="w-full">
                   <p className="font-medium text-gray-900">Title</p>
                   <input
+                    {...register("title", {
+                      required: true,
+                      maxLength: 20,
+                    })}
                     className="w-full text-sm mt-2 focus:outline-none"
                     type="text"
                     placeholder="Text goes here"
@@ -53,6 +59,10 @@ const PollForm = () => {
                     What's it about?
                   </p>
                   <input
+                    {...register("about", {
+                      required: true,
+                      maxLength: 20,
+                    })}
                     className="w-full text-sm mt-2 focus:outline-none"
                     type="text"
                     placeholder="Text goes here"

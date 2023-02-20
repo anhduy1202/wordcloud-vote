@@ -27,7 +27,7 @@ export const SinglePoll: React.FC<PollProps> = (props) => {
   return (
     <div
       className="bg-blue-100 p-4 rounded-md cursor-pointer relative md:p-8 my-14"
-      onClick={() => goToPoll()}
+      onClick={() => goToPoll}
     >
       <p className="font-bold md:text-[1.75rem]"> {title}</p>
       <p className="text-[0.85rem] border-2 rounded-[2rem] border-btn-important px-2 py-1 absolute top-[-20%] right-[-2%] font-semibold bg-white md:text-[1rem]">
