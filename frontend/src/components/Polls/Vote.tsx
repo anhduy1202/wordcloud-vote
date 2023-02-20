@@ -53,12 +53,6 @@ const Vote: React.FC<voteProps> = (props) => {
           />
           <div className="flex mt-4 w-full gap-2">
             <button
-              className="flex-1 p-2 rounded-md"
-              onClick={() => router.back()}
-            >
-              Back
-            </button>
-            <button
               type="submit"
               className="flex-1 p-2 flex justify-center rounded-md bg-btn-important text-white "
             >
