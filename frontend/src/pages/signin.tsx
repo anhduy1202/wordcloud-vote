@@ -56,6 +56,12 @@ const signin = () => {
           )}
         </button>
       </div>
+      <p className="mt-4 text-[1rem]">
+        Designed and made with 💙 by
+        <a href="https://github.com/anhduy1202" className="font-bold">
+          {' Daniel Truong'}
+        </a>
+      </p>
     </section>
   );
 };
