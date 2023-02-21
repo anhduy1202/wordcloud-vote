@@ -5,10 +5,26 @@ import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import Loading from "../Loading/Loading";
 import ReCAPTCHA from "react-google-recaptcha";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup
+  .object({
+    title: yup.string().min(5).max(20),
+    about: yup.string().min(10).max(50),
+  })
+  .required();
+type FormData = yup.InferType<typeof schema>;
 
 // Create Poll from form
 const PollForm = () => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  });
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setLoading] = useState(false);
@@ -34,7 +50,6 @@ const PollForm = () => {
     close();
     setLoading(false);
     router.reload();
-    
   };
   return (
     <Transition
@@ -66,28 +81,28 @@ const PollForm = () => {
                 <div className="w-full">
                   <p className="font-medium text-gray-900">Title</p>
                   <input
-                    {...register("title", {
-                      required: true,
-                      maxLength: 50,
-                    })}
-                    className="w-full text-sm mt-2 focus:outline-none"
+                    {...register("title")}
+                    className={`w-full text-sm mt-2 focus:outline-none ${
+                      errors.title ? "error-form" : ""
+                    }`}
                     type="text"
                     placeholder="Text goes here"
                     onChange={(e) => setTitle(e.target.value)}
                   />
+                  <p className="text-red-600 mt-2">{errors.title?.message}</p>
                   <p className="mt-2 font-medium text-gray-900">
                     What's it about?
                   </p>
                   <input
-                    {...register("about", {
-                      required: true,
-                      maxLength: 50,
-                    })}
-                    className="w-full text-sm mt-2 focus:outline-none"
+                    {...register("about")}
+                    className={`w-full text-sm mt-2 focus:outline-none ${
+                      errors.about ? "error-form" : ""
+                    }`}
                     type="text"
                     placeholder="Text goes here"
                     onChange={(e) => setDescription(e.target.value)}
                   />
+                  <p className="text-red-600 mt-2">{errors.about?.message}</p>
                 </div>
               </div>
             </div>

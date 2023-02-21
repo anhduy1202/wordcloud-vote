@@ -6,6 +6,6 @@
 
 @layer components {
   .error-form {
-    @apply border-2 border-red-600 animate-shake;
+    @apply border-2 border-red-600 animate-shake p-2;
   }
 }
