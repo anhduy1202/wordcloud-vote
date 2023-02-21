@@ -47,7 +47,6 @@ const PollForm = () => {
       captcha: captchaCode,
     };
     await axios.post("/api/poll", data);
-    close();
     setLoading(false);
     router.reload();
   };
