@@ -28,28 +28,27 @@ const PollForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const [captchaCode, setCaptchaCode] = useState("");
   const recaptchaRef: React.RefObject<any> = React.createRef();
 
   const router = useRouter();
   const createPoll = async () => {
-    await recaptchaRef.current.executeAsync();
-  };
-  const onReCAPTCHAChange = async (captchaCode: any) => {
-    // If the reCAPTCHA code is null or undefined indicating that
-    // the reCAPTCHA was expired then return early
+    setLoading(true);
+    const captchaCode = await recaptchaRef.current.executeAsync();
     if (!captchaCode) {
       return;
     }
-    setLoading(true);
     const data = {
       title: title,
       description: description,
       captcha: captchaCode,
     };
+    console.log(captchaCode);
     await axios.post("/api/poll", data);
     setLoading(false);
     router.reload();
   };
+
   return (
     <Transition
       as={Fragment}
@@ -72,7 +71,6 @@ const PollForm = () => {
               ref={recaptchaRef}
               size="invisible"
               sitekey={`${process.env.NEXT_PUBLIC_CAPTCHA}`}
-              onChange={onReCAPTCHAChange}
             />
 
             <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
