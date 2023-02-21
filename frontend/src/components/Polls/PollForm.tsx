@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import Loading from "../Loading/Loading";
+import ReCAPTCHA from "react-google-recaptcha";
 
 // Create Poll from form
 const PollForm = () => {
@@ -11,16 +12,29 @@ const PollForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const recaptchaRef: React.RefObject<any> = React.createRef();
+
   const router = useRouter();
   const createPoll = async () => {
+    await recaptchaRef.current.executeAsync();
+  };
+  const onReCAPTCHAChange = async (captchaCode: any) => {
+    // If the reCAPTCHA code is null or undefined indicating that
+    // the reCAPTCHA was expired then return early
+    if (!captchaCode) {
+      return;
+    }
     setLoading(true);
     const data = {
       title: title,
       description: description,
+      captcha: captchaCode,
     };
     await axios.post("/api/poll", data);
+    close();
     setLoading(false);
     router.reload();
+    
   };
   return (
     <Transition
@@ -38,11 +52,17 @@ const PollForm = () => {
             className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
             onSubmit={handleSubmit(async () => {
               await createPoll();
-              close();
             })}
           >
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              size="invisible"
+              sitekey={process.env.NEXT_PUBLIC_CAPTCHA}
+              onChange={onReCAPTCHAChange}
+            />
+
             <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
-              <div className="flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50">
+              <div className="flex items-center rounded-lg p-2 transition duration-150 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50">
                 <div className="w-full">
                   <p className="font-medium text-gray-900">Title</p>
                   <input
