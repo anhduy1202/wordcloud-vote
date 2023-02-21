@@ -1,12 +1,13 @@
 import Vote from "@/components/Polls/Vote";
 import { PopUp } from "@/components/Popup/Popup";
 import { Poll } from "@/types/poll";
+import { User } from "@/types/user";
 import { PrismaClient } from "@prisma/client";
 import axios from "axios";
 import {
-  GetStaticProps,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
 } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
@@ -15,34 +16,29 @@ import { Cookies } from "react-cookie";
 import { AiFillCloud, AiOutlineLink } from "react-icons/ai";
 const prisma = new PrismaClient();
 
-// Return all paths at pre-render at build time
-export async function getStaticPaths() {
-  // Get all polls id
-  const polls = await prisma.poll.findMany({
-    select: {
-      id: true,
-    },
-  });
-  return {
-    paths: polls.map((poll) => ({
-      params: { id: poll.id },
-    })),
-    fallback: false,
-  };
-}
-
-export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const id = params?.id;
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const id = context?.params?.id;
+  if (id?.length != 24) {
+    return {
+      notFound: true, //redirects to 404 page
+    };
+  }
   let user;
   // Check if user is authenticated
-  const session = await getSession(params);
+  const session = await getSession(context);
   // Get this specific poll
-  const poll: Poll | null = await prisma.poll.findUnique({
-    where: { id: `${id}` },
-    include: {
-      owner: true, // have to include this to access owner object
-    },
-  });
+  const poll: Poll | null =
+    (await prisma.poll.findUnique({
+      where: { id: `${id}` },
+      include: {
+        owner: true, // have to include this to access owner object
+      },
+    })) ?? null;
+  if (!poll) {
+    return {
+      notFound: true, //redirects to 404 page
+    };
+  }
   // If user logged in, return current user info
   if (session) {
     user = await prisma.user.findUnique({
@@ -63,7 +59,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
 const Poll = ({
   poll,
   currentUser,
-}: InferGetStaticPropsType<GetStaticProps>) => {
+}: InferGetServerSidePropsType<GetServerSideProps>) => {
   const { id, title, description, createdAt, owner, responses } = poll;
   const [isOwner, setOwner] = useState(false);
   const [isVoted, setVoted] = useState(false);
@@ -115,7 +111,7 @@ const Poll = ({
   return (
     <>
       <Head>
-        <title>{title} </title>
+        <title>{title}</title>
         <meta
           property="og:description"
           content={`Click to vote poll made by ${owner.name}`}
