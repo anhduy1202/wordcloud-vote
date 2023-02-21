@@ -100,13 +100,12 @@ const Poll = ({
   return (
     <>
       <Head>
-        <title> WordCloud Vote: {title} </title>
+        <title>{title} </title>
         <meta
-          name="description"
+          property="og:description"
           content={`Click to vote poll made by ${owner.name}`}
-          key="desc"
         />
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={`WordCloud Vote: ${title}`} />
       </Head>
       <button
         className="flex items-center justify-center mt-8"
