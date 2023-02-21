@@ -1,3 +1,4 @@
+![Vercel](http://therealsujitk-vercel-badge.vercel.app/?app=wordcloud-vote)
 # Wordcloud Vote ☁️
 > Generate a word cloud from your votes
 
