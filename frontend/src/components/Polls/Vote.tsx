@@ -19,7 +19,7 @@ const schema = yup
       .string()
       .min(2)
       .max(10)
-      .matches(/^[a-zA-Z0-9]*$/),
+      .matches(/^[a-zA-Z]*$/),
   })
   .required();
 type FormData = yup.InferType<typeof schema>;
@@ -74,7 +74,13 @@ const Vote: React.FC<voteProps> = (props) => {
             placeholder="Enter your vote here"
             onChange={(e) => setVote(e.target.value)}
           />
-          <p className="mt-2 text-red-600">{errors.vote?.message}</p>
+          {errors.vote?.type == "matches" ? (
+            <p className="mt-2 text-red-600">
+              only enter 1 word, no space, no special characters, no number
+            </p>
+          ) : (
+            <p className="mt-2 text-red-600">{errors.vote?.message}</p>
+          )}
           <div className="flex mt-4 w-full justify-center">
             <button
               type="submit"
