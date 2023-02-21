@@ -1,26 +1,41 @@
 import Vote from "@/components/Polls/Vote";
 import { PopUp } from "@/components/Popup/Popup";
 import { Poll } from "@/types/poll";
-import { User } from "@/types/user";
 import { PrismaClient } from "@prisma/client";
 import axios from "axios";
 import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
+  GetStaticProps,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
 } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { Cookies } from "react-cookie";
 import { AiFillCloud, AiOutlineLink } from "react-icons/ai";
+const prisma = new PrismaClient();
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const id = context?.params?.id;
-  const prisma = new PrismaClient();
+// Return all paths at pre-render at build time
+export async function getStaticPaths() {
+  // Get all polls id
+  const polls = await prisma.poll.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return {
+    paths: polls.map((poll) => ({
+      params: { id: poll.id },
+    })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }: GetStaticPropsContext) {
+  const id = params?.id;
   let user;
   // Check if user is authenticated
-  const session = await getSession(context);
+  const session = await getSession(params);
   // Get this specific poll
   const poll: Poll | null = await prisma.poll.findUnique({
     where: { id: `${id}` },
@@ -48,7 +63,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 const Poll = ({
   poll,
   currentUser,
-}: InferGetServerSidePropsType<GetServerSideProps>) => {
+}: InferGetStaticPropsType<GetStaticProps>) => {
   const { id, title, description, createdAt, owner, responses } = poll;
   const [isOwner, setOwner] = useState(false);
   const [isVoted, setVoted] = useState(false);
