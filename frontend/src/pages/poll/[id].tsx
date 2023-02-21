@@ -10,6 +10,7 @@ import {
   InferGetServerSidePropsType,
 } from "next";
 import { getSession, useSession } from "next-auth/react";
+import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { Cookies } from "react-cookie";
 import { AiFillCloud, AiOutlineLink } from "react-icons/ai";
@@ -30,7 +31,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // If user logged in, return current user info
   if (session) {
     user = await prisma.user.findUnique({
-      where: { email: session?.user?.email as any},
+      where: { email: session?.user?.email as any },
     });
   } else {
     user = {};
@@ -60,9 +61,13 @@ const Poll = ({
       const data = {
         responses: responses,
       };
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/cloud`, data, {
-        responseType: "blob",
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/cloud`,
+        data,
+        {
+          responseType: "blob",
+        }
+      );
       setCloudLoading(false);
       const blob = response.data;
       var myImage: any = document.querySelector("#graph");
@@ -94,6 +99,15 @@ const Poll = ({
   }, []);
   return (
     <>
+      <Head>
+        <title> WordCloud Vote: {title} </title>
+        <meta
+          name="description"
+          content={`Click to vote poll made by ${owner.name}`}
+          key="desc"
+        />
+        <meta property="og:title" content={title} />
+      </Head>
       <button
         className="flex items-center justify-center mt-8"
         onClick={() => {
