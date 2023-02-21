@@ -57,7 +57,7 @@ const PollForm = () => {
             <ReCAPTCHA
               ref={recaptchaRef}
               size="invisible"
-              sitekey={process.env.NEXT_PUBLIC_CAPTCHA}
+              sitekey={`${process.env.NEXT_PUBLIC_CAPTCHA}`}
               onChange={onReCAPTCHAChange}
             />
 
