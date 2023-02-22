@@ -32,6 +32,8 @@ form a beautiful word cloud
 
 > Poll Form with reCaptcha to prevent spamming
 <img src="https://user-images.githubusercontent.com/58461444/220312178-f880a5d3-fc1c-4e35-b9d0-fe53b5bd8dbf.png" width=412 height=791/>
+<img src="https://user-images.githubusercontent.com/58461444/220435049-b0f9adac-4f38-4045-9372-b1fb0580d8ce.png" width=412 height=791/>
+
 
 > Delete Poll Popup
 <img src="https://user-images.githubusercontent.com/58461444/220312618-9e3dff35-3640-442a-8300-ebb1854d3779.png" width=412 height=791/>
