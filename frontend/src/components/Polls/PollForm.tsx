@@ -28,7 +28,6 @@ const PollForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [captchaCode, setCaptchaCode] = useState("");
   const recaptchaRef: React.RefObject<any> = React.createRef();
 
   const router = useRouter();
@@ -43,10 +42,8 @@ const PollForm = () => {
       description: description,
       captcha: captchaCode,
     };
-    console.log(captchaCode);
-    await axios.post("/api/poll", data);
+    const res = await axios.post("/api/poll", data);
     setLoading(false);
-    router.reload();
   };
 
   return (
@@ -65,14 +62,17 @@ const PollForm = () => {
             className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
             onSubmit={handleSubmit(async () => {
               await createPoll();
+              close();
+              router.reload();
             })}
           >
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              size="invisible"
-              sitekey={`${process.env.NEXT_PUBLIC_CAPTCHA}`}
-            />
-
+            <div data-headlessui-state="open" className="">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                size="invisible"
+                sitekey={`${process.env.NEXT_PUBLIC_CAPTCHA}`}
+              />
+            </div>
             <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
               <div className="flex items-center rounded-lg p-2 transition duration-150 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50">
                 <div className="w-full">
